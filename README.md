@@ -20,7 +20,7 @@ if needed.
 
 ## Documentation
 
-Full doc is available in the [`memdb`](http://github.com/barrel-db/memdb/blob/master/doc/memdb.md) module.
+Full doc is available in the [`memdb`](memdb.md) module.
 
 ## Usage:
 ------
@@ -70,7 +70,7 @@ pass:
 
 ```
 ok =  memdb:write_batch([{put, <<"a">>, 1},
-                         {put, <<"b">>, 2},
+                         lput, <<"b">>, 2},
                          {put, <<"c">>, 3}], Db),
 
 ok =  memdb:write_batch([{put, <<"d">>, 4},
@@ -95,4 +95,12 @@ memdb:close(Engine)
 ```
 $ make
 ```
+
+
+
+## Modules ##
+
+
+<table width="100%" border="0" summary="list of modules">
+<tr><td><a href="memdb.md" class="module">memdb</a></td></tr></table>
 

@@ -19,4 +19,5 @@ logs
 _build
 memdb.d
 ebin/
+deps/
 .erlang.mk

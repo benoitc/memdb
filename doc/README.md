@@ -70,7 +70,7 @@ pass:
 
 ```
 ok =  memdb:write_batch([{put, <<"a">>, 1},
-                         {put, <<"b">>, 2},
+                         lput, <<"b">>, 2},
                          {put, <<"c">>, 3}], Db),
 
 ok =  memdb:write_batch([{put, <<"d">>, 4},
@@ -95,4 +95,12 @@ memdb:close(Engine)
 ```
 $ make
 ```
+
+
+
+## Modules ##
+
+
+<table width="100%" border="0" summary="list of modules">
+<tr><td><a href="memdb.md" class="module">memdb</a></td></tr></table>
 

@@ -585,7 +585,6 @@ iterator_next_key(Key, #{ tab := Tab, version := Version} = Itr) ->
                              [{{'$1', '$3'}}]}], 1),
     iterator_lookup(Next, Itr#{ dir => fwd} ).
 
-
 lock_version(Version, Locks) ->
     Count = case lists:keyfind(Version, 1, Locks) of
                 false -> 0;
