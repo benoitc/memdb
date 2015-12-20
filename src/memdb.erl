@@ -372,7 +372,7 @@ init([Name, _Options]) ->
            version => Version,
            iterator => nil,
            iterators => #{},
-           locks_versions => dict:new()}}.
+           busy_versions => []}}.
 
 
 handle_call({write, Ops}, _From, State) ->
@@ -452,7 +452,7 @@ spawn_iterator(State, Options) ->
     #{ version := Version,
        iterator := Itr,
        iterators := Iterators,
-       locks_versions := Locks } = State,
+       busy_versions := Locks } = State,
 
     KeysOnly = proplists:get_value(keys_only, Options, false),
 
@@ -587,19 +587,25 @@ iterator_next_key(Key, #{ tab := Tab, version := Version} = Itr) ->
 
 
 lock_version(Version, Locks) ->
-    dict:store(Version, dict_get(Version, Locks, 0) + 1, Locks).
+    Count = case lists:keyfind(Version, 1, Locks) of
+                false -> 0;
+                {Version, C} -> C
+            end,
+    lists:keyreplace(Version, 1, Locks, {Version, Count + 1}).
 
 unlock_version(Version, Locks) ->
-    case dict:find(Version, Locks) of
-        error -> Locks;
-        {ok, Count} ->
-
+    case lists:keyfind(Version, 1, Locks) of
+        false -> Locks;
+        {Version, Count} ->
             Count2 = Count - 1,
             if
-                Count2 >= 1 -> dict:store(Version, Count2, Locks);
-                true -> dict:erase(Version, Locks)
+                Count2 >= 1 ->
+                    lists:keyreplace(Version, 1, Locks, {Version, Count2});
+                true ->
+                    lists:keydelete(Version, 1, Locks)
             end
     end.
+
 
 prefix(Key) ->
     << Key/binary, 16#ff >>.
@@ -614,14 +620,6 @@ decode_key(Bin) when is_binary(Bin) ->
         _ ->
             error(badkey)
     end.
-
-
-dict_get(Key, Dict, Default) ->
-    case dict:find(Key, Dict) of
-        {ok, Val} -> Val;
-        error -> Default
-    end.
-
 
 -ifdef(TEST).
 

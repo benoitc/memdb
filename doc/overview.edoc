@@ -11,7 +11,7 @@ memdb is K/V store built on top of [ETS](http://www.erlang.org/doc/man/ets.html)
 concurrent access to the database using [MVCC](https://en.wikipedia.org/wiki/Multiversion_concurrency_control) allowing
 multiple reader to read concurrently a consitent view of the database without locking.
 
-All writes are serialized for now. 
+All writes are serialized for now.
 
 A MemDB's memory consumption increases monotonically, even if keys are deleted or values are updated. Compaction can be
 triggered manually or automatically using the auto-vacuum. A full snapshot can be stored or copied in another database
@@ -72,9 +72,9 @@ Using `memdb:write_batch/2' you can write and delete multiple values in one
 pass:
 
 ```
-    
+
 ok =  memdb:write_batch([{put, <<"a">>, 1},
-                         {put, <<"b">>, 2},
+                         lput, <<"b">>, 2},
                          {put, <<"c">>, 3}], Db),
 
 ok =  memdb:write_batch([{put, <<"d">>, 4},
@@ -99,7 +99,7 @@ memdb:close(Engine)
 ## Build
 
 ```
-$ make 
+$ make
 '''
 
 @end
